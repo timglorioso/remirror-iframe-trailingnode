@@ -28,7 +28,7 @@ function Button() {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-	const { manager, state, setState } = useRemirror({
+	const { manager, state } = useRemirror({
 		extensions: [
 			new IframeExtension({ enableResizing: false }),
 			new TrailingNodeExtension(),
@@ -39,10 +39,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 		<div className="remirror-theme">
 			<Remirror
 				manager={manager}
-				state={state}
-				onChange={({ state }) => {
-					setState(state);
-				}}
+				initialContent={state}
 			>
 				<Button />
 				<EditorComponent />
