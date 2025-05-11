@@ -1,19 +1,52 @@
+import { IframeExtension, TrailingNodeExtension } from "remirror/extensions";
+import {
+	EditorComponent,
+	Remirror,
+	useCommands,
+	useRemirror
+} from "@remirror/react";
+import "remirror/styles/all.css";
+
 import type { Route } from "./+types/home";
 
-export function loader() {
-  return { name: "React Router" };
+function Button() {
+	const { addIframe } = useCommands();
+
+	return (
+		<button
+			onClick={() => {
+				addIframe({
+					src: "https://www.remirror.io/",
+					height: 300,
+					width: 500,
+				})
+			}}
+		>
+			Add iframe
+		</button>
+	);
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return (
-    <div className="text-center p-4">
-      <h1 className="text-2xl">Hello, {loaderData.name}</h1>
-      <a
-        className="block mt-2 text-blue-500 underline hover:text-blue-600"
-        href="https://reactrouter.com/docs"
-      >
-        React Router Docs
-      </a>
-    </div>
-  );
+	const { manager, state, setState } = useRemirror({
+		extensions: [
+			new IframeExtension({ enableResizing: false }),
+			new TrailingNodeExtension(),
+		],
+  });
+
+	return (
+		<div className="remirror-theme">
+			<Remirror
+				manager={manager}
+				state={state}
+				onChange={({ state }) => {
+					setState(state);
+				}}
+			>
+				<Button />
+				<EditorComponent />
+			</Remirror>
+		</div>
+	);
 }
